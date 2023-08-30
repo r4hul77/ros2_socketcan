@@ -31,7 +31,7 @@ namespace drivers
 namespace socketcan
 {
 SocketCanReceiverNode::SocketCanReceiverNode(rclcpp::NodeOptions options)
-: lc::LifecycleNode("socket_can_receiver_node", options)
+: lc::LifecycleNode("socket_can_receiver_node", options.use_intra_process_comms(true))
 {
   interface_ = this->declare_parameter("interface", "can0");
   use_bus_time_ = this->declare_parameter<bool>("use_bus_time", false);
@@ -102,7 +102,7 @@ LNI::CallbackReturn SocketCanReceiverNode::on_deactivate(const lc::State & state
 {
   (void)state;
   frames_pub_->on_deactivate();
-  RCLCPP_DEBUG(this->get_logger(), "Receiver deactivated.");
+  RCLCPP_WARN(this->get_logger(), "Receiver deactivated.");
   destroy_bond();
   return LNI::CallbackReturn::SUCCESS;
 }
